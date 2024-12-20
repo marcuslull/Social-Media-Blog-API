@@ -1,4 +1,8 @@
 import Controller.SocialMediaController;
+import DAO.AccountDao;
+import DAO.AccountDaoImpl;
+import Model.Account;
+import Util.ConnectionUtil;
 import io.javalin.Javalin;
 
 /**
@@ -10,5 +14,16 @@ public class Main {
         SocialMediaController controller = new SocialMediaController();
         Javalin app = controller.startAPI();
         app.start(8080);
+
+
+        // TESTING BELOW HERE - REMOVE BEFORE SUBMISSION
+        ConnectionUtil.resetTestDatabase();
+
+        AccountDao accountDao = new AccountDaoImpl();
+        Account account = accountDao.createAccount(new Account("test", "test"));
+        System.out.println("Create account: " + account);
+
+        System.out.println("Get account: " + accountDao.getAccountByUsername("testuser1"));
+
     }
 }
