@@ -35,14 +35,20 @@ public class AccountServiceImpl implements AccountService {
         return null;
     }
 
+    @Override
+    public Account getAccountById(int userId) {
+        return accountDao.getAccountById(userId);
+    }
+
+    @Override
+    public boolean accountExists(Account user) {
+        return accountDao.getAccountByUsername(user.getUsername()) != null;
+    }
+
     private boolean isValidCandidateUser(Account newUser) {
         return  newUser != null &&
                 !newUser.getUsername().isEmpty() &&
                 !newUser.getPassword().isEmpty() &&
                 newUser.getPassword().length() >= 4;
-    }
-
-    private boolean accountExists(Account user) {
-        return accountDao.getAccountByUsername(user.getUsername()) != null;
     }
 }
