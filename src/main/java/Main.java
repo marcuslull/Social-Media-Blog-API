@@ -5,11 +5,12 @@ import DAO.MessageDao;
 import DAO.MessageDoaImpl;
 import Model.Account;
 import Model.Message;
+import Service.AccountService;
+import Service.AccountServiceImpl;
 import Util.ConnectionUtil;
 import io.javalin.Javalin;
 
 import java.time.Instant;
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -24,6 +25,9 @@ public class Main {
 
 
         // TESTING BELOW HERE - REMOVE BEFORE SUBMISSION
+
+        // DAO
+        System.out.println("DAO*****************************************************************");
         ConnectionUtil.resetTestDatabase();
 
         AccountDao accountDao = new AccountDaoImpl();
@@ -54,6 +58,28 @@ public class Main {
         List<Message> messageList2 = messageDao.getAllMessages();
         System.out.println("Verifying delete: ");
         messageList2.forEach(System.out::println);
+
+
+
+        // SERVICE
+        System.out.println();
+        System.out.println("SERVICE*************************************************************");
+        AccountService accountService = new AccountServiceImpl(accountDao);
+        Account validAccount = accountService.registerNewUser(new Account("newUser", "newPassword"));
+        System.out.println("validAccount = " + validAccount);
+        Account invalidAccountExistingUser = accountService.registerNewUser(new Account("testuser1", "newPassword"));
+        System.out.println("invalidAccountExistingUser = " + invalidAccountExistingUser);
+        Account invalidAccountPassToShort = accountService.registerNewUser(new Account("newUser", "pas"));
+        System.out.println("invalidAccountPassToShort = " + invalidAccountPassToShort);
+        Account invalidAccountEmptyField = accountService.registerNewUser(new Account("newUser", ""));
+        System.out.println("invalidAccountEmptyField = " + invalidAccountEmptyField);
+
+        Account validLogin = accountService.login(new Account("newUser", "newPassword"));
+        System.out.println("validLogin = " + validLogin);
+        Account invalidLoginNotExist = accountService.login(new Account("asdfasdf", "newPassword"));
+        System.out.println("invalidLoginNotExist = " + invalidLoginNotExist);
+        Account invalidLoginWrongPass = accountService.login(new Account("newUser", "newPassword1"));
+        System.out.println("invalidLoginWrongPass = " + invalidLoginWrongPass);
 
 
     }
