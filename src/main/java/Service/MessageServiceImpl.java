@@ -4,6 +4,7 @@ import DAO.MessageDao;
 import Model.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MessageServiceImpl implements MessageService {
 
@@ -17,9 +18,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message createNewMessage(Message message) {
-        if (message == null || !isValidText(message.getMessage_text())) return null;
-        if (accountService.getAccountById(message.getPosted_by()) == null) return null;
+    public Optional<Message> createNewMessage(Message message) {
+        if (message == null || !isValidText(message.getMessage_text())) return Optional.empty();
+        if (accountService.getAccountById(message.getPosted_by()).isEmpty()) return Optional.empty();
         return messageDao.createMessage(message);
     }
 
@@ -29,7 +30,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message getMessageById(int messageId) {
+    public Optional<Message> getMessageById(int messageId) {
         return messageDao.getMessageById(messageId);
     }
 
@@ -39,8 +40,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message updateMessageText(int messageId, String text) {
-        if (!isValidText(text)) return null;
+    public Optional<Message> updateMessageText(int messageId, String text) {
+        if (!isValidText(text)) return Optional.empty();
         return messageDao.updateMessageById(messageId, text);
     }
 

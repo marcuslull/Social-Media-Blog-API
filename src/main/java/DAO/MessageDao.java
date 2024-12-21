@@ -3,12 +3,13 @@ package DAO;
 import Model.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageDao {
-    Message createMessage(Message message);
+    Optional<Message> createMessage(Message message);
     List<Message> getAllMessages();
-    Message getMessageById(int id);
+    Optional<Message> getMessageById(int id);
     List<Message> getMessagesByAccount(int accountId);
-    Message updateMessageById(int id, String newMessageText);
+    Optional<Message> updateMessageById(int id, String newMessageText);
     void deleteMessageById(int id);
 }

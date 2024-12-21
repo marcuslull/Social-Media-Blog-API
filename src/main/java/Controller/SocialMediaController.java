@@ -17,6 +17,7 @@ import io.javalin.http.Context;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -69,11 +70,8 @@ public class SocialMediaController {
             context.status(200);
             context.json(returnedAccount);
 
-        } catch (JacksonException jacksonException) {
-            context.status(400);
-            System.out.println(jacksonException.getMessage());
-        } catch (NoSuchElementException noSuchElementException) {
-            System.out.println(noSuchElementException.getMessage());
+        } catch (JacksonException | NoSuchElementException exception) {
+            System.out.println(exception.getMessage());
             context.status(400);
         }
     }
@@ -86,10 +84,8 @@ public class SocialMediaController {
             context.status(200);
             context.json(returnedAccount);
 
-        } catch (JacksonException jacksonException) {
-            System.out.println(jacksonException.getMessage());
-        } catch (NoSuchElementException noSuchElementException) {
-            System.out.println(noSuchElementException.getMessage());
+        } catch (JacksonException | NoSuchElementException exception) {
+            System.out.println(exception.getMessage());
             context.status(401);
         }
     }
@@ -97,123 +93,66 @@ public class SocialMediaController {
     private void postNewMessage(Context context) {
         try {
 
-            // JSON > Object
             Message message = objectMapper.readValue(context.body(), Message.class);
-            if (message == null) { // invalid body
-                context.status(400);
-                return;
-            }
-
-            // processing
-            Message returnedMessage = messageService.createNewMessage(message);
-            if (returnedMessage == null) { // invalid message
-                context.status(400);
-                return;
-            }
-
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(returnedMessage);
+            Message returnedMessage = messageService.createNewMessage(message).orElseThrow();
             context.status(200);
-            context.json(jsonString);
+            context.json(returnedMessage);
 
-        } catch (JacksonException jacksonException) {
-            System.out.println(jacksonException.getMessage());
+        } catch (JacksonException | NoSuchElementException exception) {
+            System.out.println(exception.getMessage());
+            context.status(400);
         }
     }
 
     private void getAllMessages(Context context) {
-        try {
 
-            // processing
-            List<Message> allMessages = messageService.getAllMessages();
+        List<Message> allMessages = messageService.getAllMessages();
+        context.status(200);
+        context.json(allMessages);
 
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(allMessages);
-            context.status(200);
-            context.json(jsonString);
-
-        } catch (JacksonException jacksonException) {
-            System.out.println(jacksonException.getMessage());
-        }
     }
 
     private void getMessageById(Context context) {
         try {
 
-            // get the id from the path
             int messageId = Integer.parseInt(context.pathParam("message_id"));
-
-            // process
-            Message returnedMessage = messageService.getMessageById(messageId);
-            if (returnedMessage == null) {
-                context.status(200); // per instructions
-                return;
-            }
-
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(returnedMessage);
+            Message returnedMessage = messageService.getMessageById(messageId).orElseThrow();
             context.status(200);
-            context.json(jsonString);
+            context.json(returnedMessage);
 
-        } catch (JacksonException jacksonException) {
-            System.out.println(jacksonException.getMessage());
+        } catch (NoSuchElementException exception) {
+            System.out.println(exception.getMessage());
+            context.status(200);
         }
     }
 
     private void deleteMessageById(Context context) {
         try {
 
-            // get the id from the path
             int messageId = Integer.parseInt(context.pathParam("message_id"));
-
-            // for some reason the requirements call for a deleted object to be returned
-            Message returnedMessage = messageService.getMessageById(messageId);
-
-            if (returnedMessage == null) {
-                context.status(200);
-                return;
-            }
-
-            // process
+            Message returnedMessage = messageService.getMessageById(messageId).orElseThrow();
             messageService.deleteMessageById(messageId);
-
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(returnedMessage);
             context.status(200);
-            context.json(jsonString);
+            context.json(returnedMessage);
 
-        } catch (JacksonException jacksonException) {
+        } catch (NoSuchElementException jacksonException) {
             System.out.println(jacksonException.getMessage());
+            context.status(200);
         }
     }
 
     private void patchMessageById(Context context) {
         try {
 
-            // get the id from the path
             int messageId = Integer.parseInt(context.pathParam("message_id"));
-
-            // JSON > Object
             Message message = objectMapper.readValue(context.body(), Message.class);
-            if (message == null) { // invalid body
-                context.status(400);
-                return;
-            }
-
-            // process
-            Message returnedMessage = messageService.updateMessageText(messageId, message.getMessage_text());
-            if (returnedMessage == null) {
-                context.status(400); // per instructions
-                return;
-            }
-
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(returnedMessage);
+            Message returnedMessage = messageService.updateMessageText(messageId, message.getMessage_text()).orElseThrow();
             context.status(200);
-            context.json(jsonString);
+            context.json(returnedMessage);
 
-        } catch (JacksonException jacksonException) {
-            System.out.println(jacksonException.getMessage());
+        } catch (JacksonException | NoSuchElementException exception) {
+            System.out.println(exception.getMessage());
+            context.status(400);
         }
     }
 

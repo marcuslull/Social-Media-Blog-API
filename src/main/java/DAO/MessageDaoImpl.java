@@ -6,6 +6,7 @@ import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MessageDaoImpl implements MessageDao{
 
@@ -17,7 +18,7 @@ public class MessageDaoImpl implements MessageDao{
     public static final String DELETE_BY_ID = "DELETE FROM message WHERE message_id = ?";
 
     @Override
-    public Message createMessage(Message message) {
+    public Optional<Message> createMessage(Message message) {
         try {
             Connection connection = ConnectionUtil.getConnection();
 
@@ -38,13 +39,14 @@ public class MessageDaoImpl implements MessageDao{
             ResultSet pk = preparedStatement.getGeneratedKeys();
             if (pk.next()) {
                 message.setMessage_id(pk.getInt(1));
+                return Optional.of(message);
             }
 
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
 
-        return message;
+        return Optional.empty();
     }
 
     @Override
@@ -73,7 +75,7 @@ public class MessageDaoImpl implements MessageDao{
     }
 
     @Override
-    public Message getMessageById(int id) {
+    public Optional<Message> getMessageById(int id) {
         Message returnMessage = null;
 
         try {
@@ -100,7 +102,7 @@ public class MessageDaoImpl implements MessageDao{
             System.out.println(sqlException.getMessage());
         }
 
-        return returnMessage; // either null or returned entity
+        return Optional.ofNullable(returnMessage); // either null or returned entity
     }
 
     @Override
@@ -129,7 +131,7 @@ public class MessageDaoImpl implements MessageDao{
     }
 
     @Override
-    public Message updateMessageById(int id, String newMessageText) {
+    public Optional<Message> updateMessageById(int id, String newMessageText) {
         try {
             Connection connection = ConnectionUtil.getConnection();
 
@@ -137,8 +139,8 @@ public class MessageDaoImpl implements MessageDao{
             if (connection == null) throw new SQLException("Could not get connection");
 
             // will not proceed if message not found
-            Message message = getMessageById(id);
-            if (message == null) throw new SQLException("Message not found");
+            Optional<Message> message = getMessageById(id);
+            if (message.isEmpty()) throw new SQLException("Message not found");
 
             // set the var for our prepared statement
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_MESSAGE_TEXT);
@@ -150,14 +152,14 @@ public class MessageDaoImpl implements MessageDao{
             if (affectedRows == 0)  throw new SQLException("Message update was not persisted");
 
             // update successful - updating and returning the argument, so I don't have to query the DB again.
-            message.setMessage_text(newMessageText);
+            message.get().setMessage_text(newMessageText);
             return message;
 
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
 
-        return null; // shouldn't reach this
+        return Optional.empty(); // shouldn't reach this
     }
 
     @Override

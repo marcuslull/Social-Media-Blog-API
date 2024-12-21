@@ -3,12 +3,13 @@ package Service;
 import Model.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageService {
-    Message createNewMessage(Message message);
+    Optional<Message> createNewMessage(Message message);
     List<Message> getAllMessages();
-    Message getMessageById(int messageId);
+    Optional<Message> getMessageById(int messageId);
     List<Message> getAllUserMessages(int accountId);
-    Message updateMessageText(int messageId, String text);
+    Optional<Message> updateMessageText(int messageId, String text);
     void deleteMessageById(int messageId);
 }
