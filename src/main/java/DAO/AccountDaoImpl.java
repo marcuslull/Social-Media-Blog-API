@@ -6,6 +6,11 @@ import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.Optional;
 
+/**
+ * Data Access Object Implementation for Accounts.  Provides methods to interact with the database
+ * for Account related operations.
+ * ALL JAVA DOCS GENERATED WITH AI
+ */
 public class AccountDaoImpl implements AccountDao{
 
     public static final String INSERT = "INSERT INTO account (username, password) VALUES (?, ?)";
@@ -38,6 +43,10 @@ public class AccountDaoImpl implements AccountDao{
             }
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -68,6 +77,10 @@ public class AccountDaoImpl implements AccountDao{
             }
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -99,6 +112,10 @@ public class AccountDaoImpl implements AccountDao{
             }
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 

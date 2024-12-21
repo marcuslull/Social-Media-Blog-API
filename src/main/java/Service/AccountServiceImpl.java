@@ -6,6 +6,11 @@ import Model.Account;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Service object implementation for Accounts. Provides methods to interact with the controller
+ * and Account DAO for Accounts related operations.
+ * ALL JAVA DOCS GENERATED WITH AI
+ */
 public class AccountServiceImpl implements AccountService {
 
     // dependency injection

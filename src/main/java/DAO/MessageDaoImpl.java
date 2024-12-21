@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data Access Object Implementation for Messages.  Provides methods to interact with the database
+ * for Message related operations.
+ * ALL JAVA DOCS GENERATED WITH AI
+ */
 public class MessageDaoImpl implements MessageDao{
 
     public static final String INSERT = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
@@ -43,6 +48,10 @@ public class MessageDaoImpl implements MessageDao{
             }
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -68,6 +77,10 @@ public class MessageDaoImpl implements MessageDao{
             extractMessageRowsFromResultSet(returnMessageList, resultSet);
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -99,6 +112,10 @@ public class MessageDaoImpl implements MessageDao{
             }
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -124,6 +141,10 @@ public class MessageDaoImpl implements MessageDao{
             extractMessageRowsFromResultSet(returnMessageList, resultSet);
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -156,6 +177,10 @@ public class MessageDaoImpl implements MessageDao{
             return message;
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
 
@@ -177,6 +202,10 @@ public class MessageDaoImpl implements MessageDao{
             preparedStatement.executeUpdate();
 
         } catch (SQLException sqlException) {
+            // options for grabbing the Javalin context are not great without
+            // passing it all the way down the chain. This leads to tight coupling
+
+            // should return an HTTP 500
             System.out.println(sqlException.getMessage());
         }
     }

@@ -6,6 +6,11 @@ import Model.Message;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service object implementation for Messages. Provides methods to interact with the controller
+ * and Message DAO for Message related operations.
+ * ALL JAVA DOCS GENERATED WITH AI
+ */
 public class MessageServiceImpl implements MessageService {
 
     // dependency injection
