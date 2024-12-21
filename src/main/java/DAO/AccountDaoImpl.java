@@ -4,6 +4,7 @@ import Model.Account;
 import Util.ConnectionUtil;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class AccountDaoImpl implements AccountDao{
 
@@ -12,7 +13,7 @@ public class AccountDaoImpl implements AccountDao{
     public static final String GET_BY_USERNAME = "SELECT * FROM account WHERE username = ?";
 
     @Override
-    public Account createAccount(Account account) {
+    public Optional<Account> createAccount(Account account) {
 
         try {
             Connection connection = ConnectionUtil.getConnection();
@@ -33,17 +34,18 @@ public class AccountDaoImpl implements AccountDao{
             ResultSet pk = preparedStatement.getGeneratedKeys();
             if (pk.next()) {
                 account.setAccount_id(pk.getInt(1));
+                return Optional.of(account);
             }
 
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
 
-        return account;
+        return Optional.empty();
     }
 
     @Override
-    public Account getAccountById(int userId) {
+    public Optional<Account> getAccountById(int userId) {
         Account returnAccount = null;
 
         try {
@@ -69,11 +71,11 @@ public class AccountDaoImpl implements AccountDao{
             System.out.println(sqlException.getMessage());
         }
 
-        return returnAccount; // either null or returned entity
+        return Optional.ofNullable(returnAccount); // either null or returned entity
     }
 
     @Override
-    public Account getAccountByUsername(String username) {
+    public Optional<Account> getAccountByUsername(String username) {
 
         Account returnAccount = null;
 
@@ -100,6 +102,6 @@ public class AccountDaoImpl implements AccountDao{
             System.out.println(sqlException.getMessage());
         }
 
-        return returnAccount; // either null or returned entity
+        return Optional.ofNullable(returnAccount); // either null or returned entity
     }
 }

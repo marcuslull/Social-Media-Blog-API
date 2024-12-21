@@ -2,9 +2,11 @@ package Service;
 
 import Model.Account;
 
+import java.util.Optional;
+
 public interface AccountService {
-    Account registerNewUser(Account newUser);
-    Account login(Account user);
-    Account getAccountById(int userId);
+    Optional<Account> registerNewUser(Account newUser);
+    Optional<Account> login(Account user);
+    Optional<Account> getAccountById(int userId);
     boolean accountExists(Account account);
 }

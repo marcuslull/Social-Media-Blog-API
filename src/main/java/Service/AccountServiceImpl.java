@@ -4,6 +4,7 @@ import DAO.AccountDao;
 import Model.Account;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class AccountServiceImpl implements AccountService {
 
@@ -15,34 +16,34 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account registerNewUser(Account newUser) {
+    public Optional<Account> registerNewUser(Account newUser) {
 
         // validation checks
         if (isValidCandidateUser(newUser) && !accountExists(newUser)) {
             return accountDao.createAccount(newUser);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Account login(Account user) {
+    public Optional<Account> login(Account user) {
 
         // user exists and password is the same
-        Account account = accountDao.getAccountByUsername(user.getUsername());
-        if (accountExists(user) && Objects.equals(account.getPassword(), user.getPassword())) {
+        Optional<Account> account = accountDao.getAccountByUsername(user.getUsername());
+        if (account.isPresent() && Objects.equals(account.get().getPassword(), user.getPassword())) {
             return account;
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Account getAccountById(int userId) {
+    public Optional<Account> getAccountById(int userId) {
         return accountDao.getAccountById(userId);
     }
 
     @Override
     public boolean accountExists(Account user) {
-        return accountDao.getAccountByUsername(user.getUsername()) != null;
+        return accountDao.getAccountByUsername(user.getUsername()).isPresent();
     }
 
     private boolean isValidCandidateUser(Account newUser) {

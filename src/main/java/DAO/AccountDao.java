@@ -2,8 +2,10 @@ package DAO;
 
 import Model.Account;
 
+import java.util.Optional;
+
 public interface AccountDao {
-    Account createAccount(Account account);
-    Account getAccountByUsername(String username);
-    Account getAccountById(int userId);
+    Optional<Account> createAccount(Account account);
+    Optional<Account> getAccountByUsername(String username);
+    Optional<Account> getAccountById(int userId);
 }

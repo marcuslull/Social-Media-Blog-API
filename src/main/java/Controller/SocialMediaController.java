@@ -16,6 +16,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -63,54 +64,33 @@ public class SocialMediaController {
     private void postNewAccount(Context context) {
         try {
 
-            // JSON > Object
             Account account = objectMapper.readValue(context.body(), Account.class);
-            if (account == null) { // invalid body
-                context.status(400);
-                return;
-            }
-
-            // processing
-            Account returnedAccount = accountService.registerNewUser(account);
-            if (returnedAccount == null) { // invalid user account
-                context.status(400);
-                return;
-            }
-
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(returnedAccount);
+            Account returnedAccount = accountService.registerNewUser(account).orElseThrow();
             context.status(200);
-            context.json(jsonString);
+            context.json(returnedAccount);
 
         } catch (JacksonException jacksonException) {
+            context.status(400);
             System.out.println(jacksonException.getMessage());
+        } catch (NoSuchElementException noSuchElementException) {
+            System.out.println(noSuchElementException.getMessage());
+            context.status(400);
         }
     }
 
     private void postLogin(Context context) {
         try {
 
-            // JSON > Object
             Account account = objectMapper.readValue(context.body(), Account.class);
-            if (account == null) { // invalid body
-                context.status(401);
-                return;
-            }
-
-            // processing
-            Account returnedAccount = accountService.login(account);
-            if (returnedAccount == null) { // invalid user account
-                context.status(401);
-                return;
-            }
-
-            // Object > JSON > Response body
-            String jsonString = objectMapper.writeValueAsString(returnedAccount);
+            Account returnedAccount = accountService.login(account).orElseThrow();
             context.status(200);
-            context.json(jsonString);
+            context.json(returnedAccount);
 
         } catch (JacksonException jacksonException) {
             System.out.println(jacksonException.getMessage());
+        } catch (NoSuchElementException noSuchElementException) {
+            System.out.println(noSuchElementException.getMessage());
+            context.status(401);
         }
     }
 
