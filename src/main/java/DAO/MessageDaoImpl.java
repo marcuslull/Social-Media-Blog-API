@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageDoaImpl implements MessageDao{
+public class MessageDaoImpl implements MessageDao{
 
     public static final String INSERT = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
     public static final String GET_ALL = "SELECT * FROM message";
